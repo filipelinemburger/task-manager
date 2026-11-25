@@ -1,0 +1,213 @@
+:root {
+  --bg: #f6f7f9;
+  --card: #ffffff;
+  --text: #1d2330;
+  --muted: #667085;
+  --border: #dde1e7;
+  --primary: #2f5bea;
+  --danger: #c4302b;
+  --success: #1e7f4f;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  color: var(--text);
+  background: var(--bg);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+h1 {
+  font-size: 1.5rem;
+  margin: 0 0 1rem;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1.5rem;
+  background: var(--card);
+  border-bottom: 1px solid var(--border);
+}
+
+.brand {
+  font-weight: 700;
+  color: var(--text);
+  text-decoration: none;
+}
+
+.container {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 1.5rem;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.small {
+  font-size: 0.85rem;
+}
+
+.error-text {
+  color: var(--danger);
+  font-size: 0.9rem;
+  margin: 0.25rem 0 0;
+}
+
+.button {
+  display: inline-block;
+  padding: 0.45rem 0.9rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--card);
+  color: var(--text);
+  font: inherit;
+  font-size: 0.9rem;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.button:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
+
+.button-primary {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #fff;
+}
+
+.button-danger {
+  color: var(--danger);
+  border-color: var(--danger);
+}
+
+.task-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.task-card {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  transition: opacity 0.2s;
+}
+
+.task-card.is-deleting {
+  opacity: 0.5;
+}
+
+.task-title {
+  font-size: 1.05rem;
+  margin: 0 0 0.25rem;
+  overflow-wrap: anywhere;
+}
+
+.task-description {
+  margin: 0 0 0.5rem;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.task-body p:last-child {
+  margin-bottom: 0;
+}
+
+.task-actions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: flex-start;
+  flex-shrink: 0;
+}
+
+.list-footer {
+  text-align: center;
+  padding: 1.5rem 0;
+}
+
+.empty {
+  text-align: center;
+  padding: 2rem 0;
+}
+
+.form {
+  display: grid;
+  gap: 1rem;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1.25rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.field label {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.field input,
+.field textarea {
+  font: inherit;
+  padding: 0.5rem 0.6rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+
+.field [aria-invalid="true"] {
+  border-color: var(--danger);
+}
+
+.form-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.toasts {
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  display: grid;
+  gap: 0.5rem;
+  z-index: 10;
+}
+
+.toast {
+  padding: 0.65rem 1rem;
+  border-radius: 6px;
+  color: #fff;
+  box-shadow: 0 4px 12px rgb(0 0 0 / 0.15);
+  max-width: 320px;
+}
+
+.toast-success {
+  background: var(--success);
+}
+
+.toast-error {
+  background: var(--danger);
+}
+
+@media (max-width: 520px) {
+  .task-card {
+    flex-direction: column;
+  }
+}
