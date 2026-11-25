@@ -7,13 +7,12 @@ import { appRouter } from "@/server/routers/_app";
 import { createContext } from "@/server/trpc";
 import { makeQueryClient } from "./query-client";
 
-/** One QueryClient per server request (React `cache` scopes it to the request). */
+/** One React Query client per server request. */
 export const getQueryClient = cache(makeQueryClient);
 
 /**
- * tRPC helpers for Server Components. Calls go straight to the router in the
- * same process (no HTTP round trip), and the results land in the QueryClient
- * so they can be sent to the browser with <HydrateClient>.
+ * tRPC for Server Components. It calls the backend directly (no HTTP request),
+ * and <HydrateClient> sends the loaded data to the browser.
  */
 export const trpc = createTRPCOptionsProxy({
   ctx: createContext,

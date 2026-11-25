@@ -12,17 +12,16 @@ export type UpdateTaskInput = { titulo?: string; descricao?: string };
 
 export type TaskPage = {
   items: Task[];
-  /** Cursor to fetch the next page, or null when there are no more tasks. */
+  /** Where the next page starts, or null if there are no more tasks. */
   nextCursor: number | null;
 };
 
 /**
- * In-memory task repository.
+ * Keeps the tasks in memory.
  *
- * Each task gets a monotonically increasing sequence number (`seq`). Listing is
- * ordered newest-first and paginated with `seq` as the cursor ("give me tasks
- * older than X"). Unlike offset pagination, this stays correct when tasks are
- * created or deleted between page loads (no skipped or duplicated items).
+ * Each task gets a number that only goes up (`seq`). The list shows the newest
+ * tasks first, and each page asks for "tasks older than X". This way no task is
+ * skipped or repeated when tasks are added or deleted while scrolling.
  */
 export class TaskStore {
   private readonly tasks = new Map<string, { task: Task; seq: number }>();
@@ -40,7 +39,7 @@ export class TaskStore {
   }
 
   list({ limit, cursor }: { limit: number; cursor?: number | null }): TaskPage {
-    // Newest first. A Map keeps insertion order, so reversing gives descending seq.
+    // Newest first: a Map keeps the order tasks were added, so we reverse it.
     const ordered = [...this.tasks.values()].reverse();
     const start = cursor == null ? ordered : ordered.filter((e) => e.seq < cursor);
     const page = start.slice(0, limit);
@@ -64,7 +63,7 @@ export class TaskStore {
     const updated: Task = {
       ...entry.task,
       ...(input.titulo !== undefined && { titulo: input.titulo }),
-      // An explicit empty string clears the description; undefined leaves it unchanged.
+      // An empty string clears the description. If not sent, it stays the same.
       ...(input.descricao !== undefined && { descricao: emptyToUndefined(input.descricao) }),
     };
     this.tasks.set(id, { task: updated, seq: entry.seq });
@@ -114,9 +113,8 @@ const SAMPLE_TASKS: CreateTaskInput[] = [
 ];
 
 /**
- * Store shared by every request. It is kept on `globalThis` so that it survives
- * Next.js hot reloads in development (otherwise each edit would wipe the data).
- * All sample data is fictitious.
+ * One store for the whole app. It is saved on `globalThis` so the data is not
+ * lost when the code reloads during development. The sample tasks are fake.
  */
 const globalForStore = globalThis as unknown as { taskStore?: TaskStore };
 

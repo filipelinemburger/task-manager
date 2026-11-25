@@ -1,8 +1,8 @@
 import { z } from "zod";
 
 /**
- * Validation rules shared by the tRPC backend and the form on the client.
- * Keeping them in one place means the UI and the API can never disagree.
+ * Validation rules used by both the backend and the form,
+ * so both always follow the same rules.
  */
 export const TITLE_MAX = 120;
 export const DESCRIPTION_MAX = 1000;
@@ -28,7 +28,7 @@ export const createTaskSchema = z.object({
 export const updateTaskSchema = z.object({
   id: taskIdSchema,
   titulo: tituloSchema.optional(),
-  // Send "" to clear the description; omit it to keep the current one.
+  // Send "" to clear the description, or leave it out to keep it.
   descricao: descricaoSchema.optional(),
 });
 

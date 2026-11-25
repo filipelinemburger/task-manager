@@ -2,19 +2,17 @@ import { defaultShouldDehydrateQuery, QueryClient } from "@tanstack/react-query"
 import superjson from "superjson";
 
 /**
- * One factory used on both sides: the server creates a client per request to
- * prefetch data for SSR, and the browser creates a single long-lived client.
+ * Creates the React Query client. Used by both the server (for SSR) and the browser.
  */
 export function makeQueryClient() {
   return new QueryClient({
     defaultOptions: {
       queries: {
-        // Data rendered on the server is considered fresh for a moment, so the
-        // browser does not immediately refetch what it just received.
+        // Don't fetch again right after the page loads with data from the server.
         staleTime: 30 * 1000,
       },
       dehydrate: {
-        // Dates (dataCriacao) must survive the trip from server HTML to client cache.
+        // Keep dates as Date objects when sending data from the server to the browser.
         serializeData: superjson.serialize,
         shouldDehydrateQuery: (query) =>
           defaultShouldDehydrateQuery(query) || query.state.status === "pending",

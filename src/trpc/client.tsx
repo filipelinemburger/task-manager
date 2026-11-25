@@ -13,9 +13,9 @@ export const { TRPCProvider, useTRPC } = createTRPCContext<AppRouter>();
 let browserQueryClient: QueryClient | undefined;
 
 function getQueryClient() {
-  // On the server, always make a new client so requests never share data.
+  // On the server, create a new client for each request.
   if (typeof window === "undefined") return makeQueryClient();
-  // In the browser, reuse one client so the cache survives re-renders.
+  // In the browser, reuse the same client so the cache is kept.
   browserQueryClient ??= makeQueryClient();
   return browserQueryClient;
 }

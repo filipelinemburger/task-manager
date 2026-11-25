@@ -15,7 +15,7 @@ import { useTRPC } from "@/trpc/client";
 import { useToast } from "./toast";
 
 type Props = {
-  /** When given, the form edits this task; otherwise it creates a new one. */
+  /** If a task is passed, the form edits it. If not, it creates a new one. */
   task?: { id: string; titulo: string; descricao?: string };
 };
 
@@ -37,7 +37,7 @@ export function TaskForm({ task }: Props) {
       router.push("/");
     },
     onError: (err: { message: string; data?: { fieldErrors?: TaskFieldErrors | null } | null }) => {
-      // Validation errors from the backend are shown next to the matching field.
+      // Show backend errors under the right field.
       if (err.data?.fieldErrors) setFieldErrors(err.data.fieldErrors);
       toast("error", isEdit ? `Could not update the task: ${err.message}` : `Could not create the task: ${err.message}`);
     },
@@ -50,7 +50,7 @@ export function TaskForm({ task }: Props) {
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    // Same rules as the backend: stop here if the title is empty or a field is too long.
+    // Check the fields before sending (same rules as the backend).
     const parsed = createTaskSchema.safeParse({ titulo, descricao });
     if (!parsed.success) {
       setFieldErrors(z.flattenError(parsed.error).fieldErrors);

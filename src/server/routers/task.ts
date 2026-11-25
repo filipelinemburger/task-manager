@@ -8,7 +8,7 @@ function notFound(id: string): never {
 }
 
 export const taskRouter = router({
-  /** Paginated list, newest first. `cursor` is managed by useInfiniteQuery on the client. */
+  /** List tasks page by page, newest first. */
   list: publicProcedure
     .input(
       z.object({

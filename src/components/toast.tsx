@@ -8,8 +8,8 @@ type Toast = { id: number; kind: ToastKind; message: string };
 const ToastContext = createContext<((kind: ToastKind, message: string) => void) | null>(null);
 
 /**
- * Minimal toast system. It lives in the root layout, so a message shown right
- * before a navigation (e.g. "Task created") is still visible on the next page.
+ * Small pop-up messages. They live in the main layout, so a message like
+ * "Task created" stays visible after going to another page.
  */
 export function ToastProvider({ children }: { children: React.ReactNode }) {
   const [toasts, setToasts] = useState<Toast[]>([]);

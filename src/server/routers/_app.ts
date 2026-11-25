@@ -5,7 +5,7 @@ export const appRouter = router({
   task: taskRouter,
 });
 
-// Only the type is shared with the client: no server code ends up in the browser bundle.
+// The client only uses this type, so no server code goes to the browser.
 export type AppRouter = typeof appRouter;
 
 export const createCaller = createCallerFactory(appRouter);

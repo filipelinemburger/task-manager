@@ -13,7 +13,7 @@ export function TaskList() {
   const queryClient = useQueryClient();
   const toast = useToast();
 
-  // The first page is already in the cache (prefetched on the server), so this does not suspend on first load.
+  // The first page was already loaded on the server, so it shows right away.
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isError, error } =
     useSuspenseInfiniteQuery(
       trpc.task.list.infiniteQueryOptions({ limit: PAGE_SIZE }, { getNextPageParam }),
@@ -24,7 +24,7 @@ export function TaskList() {
   const deleteTask = useMutation(
     trpc.task.delete.mutationOptions({
       onSuccess: async ({ id }) => {
-        // Remove the task from the cached pages right away, so it disappears instantly...
+        // Remove the task from the list right away...
         queryClient.setQueryData(listQueryKey, (old) =>
           old && {
             ...old,
@@ -35,14 +35,14 @@ export function TaskList() {
           },
         );
         toast("success", "Task deleted.");
-        // ...then sync with the server in the background.
+        // ...then reload the list from the server.
         await queryClient.invalidateQueries({ queryKey: trpc.task.list.pathKey() });
       },
       onError: (err) => toast("error", `Could not delete the task: ${err.message}`),
     }),
   );
 
-  // Infinite scroll: when the sentinel below the list becomes visible, load the next page.
+  // Infinite scroll: when the end of the list is visible, load more tasks.
   const sentinelRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const sentinel = sentinelRef.current;
@@ -107,7 +107,7 @@ export function TaskList() {
         {isError && <p className="error-text">Could not load more tasks: {error?.message}</p>}
         {isFetchingNextPage && <p className="muted">Loading more tasks…</p>}
         {hasNextPage && !isFetchingNextPage && (
-          // Fallback for when the observer does not fire (e.g. very tall screens).
+          // Backup button in case the automatic loading does not run.
           <button type="button" className="button" onClick={() => fetchNextPage()}>
             Load more
           </button>

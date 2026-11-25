@@ -6,7 +6,7 @@ import { createCaller } from "./_app";
 let caller: ReturnType<typeof createCaller>;
 
 beforeEach(() => {
-  // A fresh, empty store for every test (no sample data).
+  // A new empty store for each test.
   caller = createCaller({ taskStore: new TaskStore() });
 });
 
@@ -22,7 +22,7 @@ describe("task router", () => {
     const task = await caller.task.create({ titulo: "  Write tests  ", descricao: "With vitest" });
 
     expect(task.id).toMatch(/^[0-9a-f-]{36}$/);
-    expect(task.titulo).toBe("Write tests"); // trimmed
+    expect(task.titulo).toBe("Write tests"); // spaces removed
     expect(task.descricao).toBe("With vitest");
     expect(task.dataCriacao).toBeInstanceOf(Date);
   });
